@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import CourseInput from "./components/CourseGoal/CourseInput";
+import CourseGoalList from "./components/CourseGoal/CourseGoalList";
+import "./App.css";
 
-function App() {
+const App = (props) => {
+  const [courseGoal, setCourseGoal] = useState([]);
+
+  const addGoalHandler = (enteredGoal) => {
+    setCourseGoal((prevGoal) => {
+      const updatedGoals = [...prevGoal];
+      updatedGoals.unshift({ text: enteredGoal, id: Math.random().toString() });
+      return updatedGoals;
+    });
+  };
+  const deleteHandler = (goalId) => {
+    setCourseGoal((prevGoal) => {
+      const updatedGoals = prevGoal.filter((goal) => goal.id !== goalId);
+      return updatedGoals;
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="goal-form">
+        <CourseInput onAddGoal={addGoalHandler} />
+        <div className="goal">
+          {courseGoal.length === 0 ? (
+            <p style={{ textAlign: "center" }}>No goals. Add Goals</p>
+          ) : (
+            <CourseGoalList items={courseGoal} onDeleteItem={deleteHandler} />
+          )}
+        </div>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
